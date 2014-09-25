@@ -1,0 +1,9 @@
+---
+reporters:
+  - klass: CpuUsage
+    name: cpu_usage
+
+widgets:
+  - klass: Box
+    id: 506216
+    reporter: cpu_usage
