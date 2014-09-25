@@ -2,10 +2,6 @@ module DucksboardReporter
   module Reporters
     class CpuUsage < Reporter
 
-      def value
-        @cpu_usage
-      end
-
       def collect
         stats = nil
         while true do
@@ -25,7 +21,8 @@ module DucksboardReporter
 
           proc_usage = current_stats[0,3].reduce(:+) - stats[0,3].reduce(:+)
           proc_total = current_stats.reduce(:+) - stats.reduce(:+)
-          @cpu_usage = (100 * proc_usage.to_f / proc_total).round
+
+          self.value = (100 * proc_usage.to_f / proc_total).round
 
           stats = current_stats
         end

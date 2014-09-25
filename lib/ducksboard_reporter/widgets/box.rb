@@ -3,7 +3,7 @@ module DucksboardReporter
     class Box < Widget
 
       def update
-        value = reporter.value
+        value = reporter.public_send(value_method)
         debug log_format("Updating value #{value}")
         widget.update(value)
       end

@@ -34,6 +34,10 @@ module DucksboardReporter
       @log_prefix ||= "Widget #{self.class.name.split("::").last}(#{id}): "
       @log_prefix + msg
     end
+
+    def value_method
+      options.value || :value
+    end
   end
 end
 

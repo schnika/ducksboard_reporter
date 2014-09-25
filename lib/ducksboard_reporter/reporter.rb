@@ -3,18 +3,16 @@ module DucksboardReporter
     include Celluloid
     include Celluloid::Logger
 
-    attr_reader :options
+    attr_reader :options, :value
 
     def initialize(options = {})
       @options = options
+      @value = nil
     end
 
     def start
+      debug log_format("Started")
       async.collect
-    end
-
-    def value
-      raise NotImplementedError
     end
 
     def collect; end
@@ -25,6 +23,13 @@ module DucksboardReporter
 
     def to_s
       options.name
+    end
+
+    private
+
+    def log_format(msg)
+      @log_prefix ||= "Reporter #{self.class.name.split("::").last}(#{to_s}): "
+      @log_prefix + msg
     end
   end
 end

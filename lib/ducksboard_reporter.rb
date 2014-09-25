@@ -18,13 +18,18 @@ Thread.abort_on_exception = true
 
 module DucksboardReporter
   extend self
+  include Celluloid::Logger
 
   def config
     @config ||= Hashie::Mash.load("config.yml")
   end
 
   def logger
-    @logger ||= Celluloid.logger = Logger.new($stdout)
+    @logger || self.logger = Logger.new($stdout)
+  end
+
+  def logger=(logger)
+    @logger = Celluloid.logger = logger
   end
 
   def reporters
@@ -56,7 +61,14 @@ module DucksboardReporter
 
   def instanciate_widgets
     DucksboardReporter.config.widgets.each do |config|
-      widget = Widgets.const_get(config.klass, false).new(config.id, reporters[config.reporter], config)
+      reporter = reporters[config.reporter]
+
+      unless reporter
+        logger.error("Cannot find reporter #{config.reporter}")
+        exit
+      end
+
+      widget = Widgets.const_get(config.klass, false).new(config.id, reporter, config)
       widget.start
       widgets << widget
     end
