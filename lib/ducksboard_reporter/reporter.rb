@@ -9,6 +9,10 @@ module DucksboardReporter
       @options = options
     end
 
+    def start
+      async.collect
+    end
+
     def value
       raise NotImplementedError
     end
@@ -17,6 +21,10 @@ module DucksboardReporter
 
     def timestamp
       Time.now.to_i
+    end
+
+    def to_s
+      options.name
     end
   end
 end

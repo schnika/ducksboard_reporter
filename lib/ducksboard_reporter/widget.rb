@@ -3,20 +3,36 @@ module DucksboardReporter
     include Celluloid
     include Celluloid::Logger
 
-    attr_reader :options
+    attr_reader :id, :reporter, :options
 
-    def initialize(options = {})
+    def initialize(id, reporter, options = {})
+      @id = id
+      @reporter = reporter
       @options = options
     end
 
     def start
-      every(10) do
-        report
+      debug log_format("Started with reporter #{reporter}")
+
+      async.update # initial update
+      every(options.interval || 10) do
+        update
       end
     end
 
-    def report
+    def update
       raise NotImplementedError
+    end
+
+    def interval
+      options.interval || 10
+    end
+
+    private
+
+    def log_format(msg)
+      @log_prefix ||= "Widget #{self.class.name.split("::").last}(#{id}): "
+      @log_prefix + msg
     end
   end
 end

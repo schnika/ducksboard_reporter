@@ -1,9 +1,11 @@
 ---
+api_key: RPq124TkDHwsYSY2FnOni9HJqfyMKULEmXr10hL1tVAN3RcREr
+
 reporters:
-  - klass: CpuUsage
-    name: cpu_usage
+  - klass: Random
+    name: random
 
 widgets:
   - klass: Box
-    id: 506216
-    reporter: cpu_usage
+    id: 506475
+    reporter: random

@@ -3,4 +3,4 @@ module DucksboardReporter
   end
 end
 
-require "ducksboard_reporter/reporters/cpu_usage"
+Dir[File.dirname(__FILE__) + '/reporters/*.rb'].each {|file| require file }
