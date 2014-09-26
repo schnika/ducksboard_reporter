@@ -1,6 +1,4 @@
 require "rubygems"
-require "bundler"
-Bundler.require(:default)
 
 require "logger"
 require "hashie"
