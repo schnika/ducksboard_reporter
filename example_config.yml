@@ -13,4 +13,5 @@ widgets:
   - type: Box
     id: 506475
     reporter: random
-    value: value
+    value:
+      current: :value

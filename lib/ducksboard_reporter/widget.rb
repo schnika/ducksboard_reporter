@@ -20,13 +20,26 @@ module DucksboardReporter
         begin
           update
         rescue Net::OpenTimeout
+          # ignore unseccessful updates
         end
       end
     end
 
     def update
-      value = reporter.public_send(value_method)
+      value = case value_method
+      when Symbol
+        reporter.public_send(value_method)
+      when Hash
+        value_method.inject({}) do |memo, (k, v)|
+          memo[k] = (v.is_a?(Symbol) ? reporter.public_send(v) : v)
+          memo
+        end
+      else
+        value_method
+      end
+
       debug log_format("Updating value #{value}")
+
       @widget.update(value)
     end
 
@@ -46,7 +59,7 @@ module DucksboardReporter
     end
 
     def instanciate_widget
-      klass = Class.new(Ducksboard.const_get(@klass, false))
+      klass = Class.new(Ducksboard::Widget)
       klass.default_timeout(interval - 1)
       klass.new(id)
     end
