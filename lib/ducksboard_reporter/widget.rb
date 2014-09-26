@@ -16,9 +16,11 @@ module DucksboardReporter
     def start
       debug log_format("Started with reporter #{reporter}")
 
-      async.update # initial update
       every(interval) do
-        update
+        begin
+          update
+        rescue Net::OpenTimeout
+        end
       end
     end
 
