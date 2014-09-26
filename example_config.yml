@@ -1,0 +1,16 @@
+---
+api_key: YOUR_API_KEY
+
+reporters:
+  - name: random
+    type: Random
+
+  - name: haproxy_log_requests
+    type: HaproxyLogRequests
+    logfile: /var/log/haproxy.log
+
+widgets:
+  - type: Box
+    id: 506475
+    reporter: random
+    value: value
