@@ -12,7 +12,6 @@ require "ducksboard_reporter/version"
 require "ducksboard_reporter/reporter"
 require "ducksboard_reporter/reporters"
 require "ducksboard_reporter/widget"
-require "ducksboard_reporter/widgets"
 
 Thread.abort_on_exception = true
 
@@ -25,11 +24,7 @@ module DucksboardReporter
   end
 
   def logger
-    @logger || self.logger = Logger.new($stdout)
-  end
-
-  def logger=(logger)
-    @logger = Celluloid.logger = logger
+    @logger ||= Celluloid.logger = Logger.new($stdout)
   end
 
   def reporters
@@ -53,7 +48,7 @@ module DucksboardReporter
 
   def instanciate_reporters
     DucksboardReporter.config.reporters.each do |config|
-      reporter = Reporters.const_get(config.klass, false).new(config)
+      reporter = Reporters.const_get(config.type, false).new(config)
       reporters[config.name] = reporter
       reporter.start
     end
@@ -68,7 +63,7 @@ module DucksboardReporter
         exit
       end
 
-      widget = Widgets.const_get(config.klass, false).new(config.id, reporter, config)
+      widget = Widget.new(config.type, config.id, reporter, config)
       widget.start
       widgets << widget
     end

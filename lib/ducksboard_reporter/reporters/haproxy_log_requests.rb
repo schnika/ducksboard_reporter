@@ -2,6 +2,8 @@ module DucksboardReporter
   module Reporters
     class HaproxyLogRequests < Reporter
 
+      attr_reader :requests, :nosrvs
+
       def collect
         requests = 0
         nosrvs = 0
@@ -14,13 +16,13 @@ module DucksboardReporter
         end
 
         file.seek(0, IO::SEEK_END)
-        @time = Time.now.to_i
+        @timestamp = Time.now.to_i
 
         while true do
           if (current_time = Time.now.to_i) > @time # flush every second
             @requests, requests = requests, 0
             @nosrvs, nosrvs = nosrvs, 0
-            @time = current_time
+            @timestamp = current_time
           end
 
           IO.select([file])

@@ -3,14 +3,14 @@ api_key: RPq124TkDHwsYSY2FnOni9HJqfyMKULEmXr10hL1tVAN3RcREr
 
 reporters:
   - name: random
-    klass: Random
+    type: Random
 
   - name: haproxy_log_requests
-    klass: HaproxyLogRequests
+    type: HaproxyLogRequests
     logfile: /var/log/haproxy.log
 
 widgets:
-  - klass: Box
+  - type: Box
     id: 506475
     reporter: random
     value: value

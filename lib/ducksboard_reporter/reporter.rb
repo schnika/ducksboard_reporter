@@ -7,7 +7,6 @@ module DucksboardReporter
 
     def initialize(options = {})
       @options = options
-      @value = nil
     end
 
     def start
@@ -18,7 +17,7 @@ module DucksboardReporter
     def collect; end
 
     def timestamp
-      Time.now.to_i
+      @timestamp || Time.now.to_i
     end
 
     def to_s

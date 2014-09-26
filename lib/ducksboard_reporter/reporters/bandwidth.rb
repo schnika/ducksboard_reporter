@@ -18,7 +18,7 @@ module DucksboardReporter
             next
           end
 
-          self.value = (current_tx_bytes - @tx_bytes) * 8
+          @value = (current_tx_bytes - @tx_bytes) * 8
           @tx_bytes = current_tx_bytes
           sleep 1
         end
