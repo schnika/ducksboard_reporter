@@ -3,7 +3,8 @@ module DucksboardReporter
     include Celluloid
     include Celluloid::Logger
 
-    attr_reader :options, :value
+    attr_reader :options
+    attr_accessor :value
 
     def initialize(options = {})
       @options = options
