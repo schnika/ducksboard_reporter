@@ -25,4 +25,5 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "hashie"
   spec.add_runtime_dependency "celluloid"
   spec.add_runtime_dependency "timers"
+  spec.add_runtime_dependency "trollop"
 end

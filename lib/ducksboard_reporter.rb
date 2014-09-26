@@ -20,7 +20,15 @@ module DucksboardReporter
   include Celluloid::Logger
 
   def config
-    @config ||= Hashie::Mash.load("config.yml")
+    @config ||= Hashie::Mash.load(config_file)
+  end
+
+  def config_file
+    @config_file
+  end
+
+  def config_file=(file)
+    @config_file = file
   end
 
   def logger
