@@ -19,7 +19,7 @@ module DucksboardReporter
         @timestamp = Time.now.to_i
 
         while true do
-          if (current_time = Time.now.to_i) > @time # flush every second
+          if (current_time = Time.now.to_i) > @timestamp # flush every second
             @requests, requests = requests, 0
             @nosrvs, nosrvs = nosrvs, 0
             @timestamp = current_time
