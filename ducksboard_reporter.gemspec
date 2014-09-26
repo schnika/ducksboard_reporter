@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = DucksboardReporter::VERSION
   spec.authors       = ["unnu"]
   spec.email         = ["norman.timmler@gmail.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.summary       = %q{Report values to ducksboard}
+  spec.description   = %q{Report values to ducksboard}
   spec.homepage      = ""
   spec.license       = "MIT"
 
