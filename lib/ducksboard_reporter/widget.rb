@@ -41,6 +41,8 @@ module DucksboardReporter
       debug log_format("Updating value #{value}")
 
       @widget.update(value)
+    rescue Net::ReadTimeout
+      # accept timeout errors
     end
 
     def interval
