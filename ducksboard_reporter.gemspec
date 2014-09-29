@@ -26,4 +26,5 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "celluloid"
   spec.add_runtime_dependency "timers"
   spec.add_runtime_dependency "trollop"
+  spec.add_runtime_dependency "rb-inotify"
 end
