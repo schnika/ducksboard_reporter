@@ -3,15 +3,14 @@ module DucksboardReporter
     include Celluloid
     include Celluloid::Logger
 
-    attr_reader :options
-    attr_accessor :value
+    attr_accessor :value, :timestamp, :name
 
-    def initialize(options = {})
-      @options = options
+    def initialize(name)
+      @name = name
     end
 
     def start
-      debug log_format("Started")
+      debug(log_format("Started"))
       async.collect
     end
 
@@ -21,14 +20,10 @@ module DucksboardReporter
       @timestamp || Time.now.to_i
     end
 
-    def to_s
-      options.name
-    end
-
     private
 
     def log_format(msg)
-      @log_prefix ||= "Reporter #{self.class.name.split("::").last}(#{to_s}): "
+      @log_prefix ||= "Reporter #{self.class.name.split("::").last}(#{@name}): "
       @log_prefix + msg
     end
   end

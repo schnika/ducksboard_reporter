@@ -8,5 +8,4 @@ opts = Trollop::options do
   opt :config_file, "Define config file", short: 'f', type: :string, required: true
 end
 
-DucksboardReporter.config_file = opts[:config_file]
-DucksboardReporter.start
+DucksboardReporter::App.new(opts[:config_file]).start

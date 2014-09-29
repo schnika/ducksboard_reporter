@@ -15,63 +15,76 @@ Thread.abort_on_exception = true
 
 module DucksboardReporter
   extend self
+
   include Celluloid::Logger
-
-  def config
-    @config ||= Hashie::Mash.load(config_file)
-  end
-
-  def config_file
-    @config_file
-  end
-
-  def config_file=(file)
-    @config_file = file
-  end
 
   def logger
     @logger ||= Celluloid.logger = Logger.new($stdout)
   end
 
-  def reporters
-    @reporters ||= {}
-  end
+  class App
 
-  def widgets
-    @widgets ||= []
-  end
+    attr_reader :config, :reporters, :widgets
 
-  def start
-    Signal.trap("INT") { exit }
+    def initialize(config_file)
+      @config ||= Hashie::Mash.load(config_file)
 
-    Ducksboard.api_key = config.api_key
-
-    instanciate_reporters
-    instanciate_widgets
-
-    sleep
-  end
-
-  def instanciate_reporters
-    DucksboardReporter.config.reporters.each do |config|
-      reporter = Reporters.const_get(config.type, false).new(config)
-      reporters[config.name] = reporter
-      reporter.start
+      register_reporters
+      register_widgets
     end
-  end
 
-  def instanciate_widgets
-    DucksboardReporter.config.widgets.each do |config|
-      reporter = reporters[config.reporter]
+    def start
+      Signal.trap("INT") { exit }
 
-      unless reporter
-        logger.error("Cannot find reporter #{config.reporter}")
-        exit
+      Ducksboard.api_key = config.api_key
+
+      sleep # let the actors continue their work
+    end
+
+    def register_reporters
+      @reporters = {}
+
+      @config.reporters.each do |config|
+        reporter = Reporters.const_get(config.type, false).new(config.name)
+
+        if config.options
+          config.options.each do |method, value|
+            reporter.send("#{method}=", value)
+          end
+        end
+
+        @reporters[reporter.name] = reporter
       end
+    end
 
-      widget = Widget.new(config.type, config.id, reporter, config)
-      widget.start
-      widgets << widget
+    def register_widgets
+      @widgets = []
+
+      @config.widgets.each do |config|
+        reporter = @reporters[config.reporter]
+
+        unless reporter
+          logger.error("Cannot find reporter #{config.reporter}")
+          exit
+        end
+
+        widget = Widget.new(config.type, config.id, reporter, config)
+        @widgets << widget
+      end
+    end
+
+    def start_reporters
+      @reporters.each {|_, reporter| reporter.start }
+    end
+
+    def start_widgets
+      @widgets.each(&:start)
+    end
+
+    private
+
+    def logger
+      DucksboardReporter.logger
     end
   end
 end

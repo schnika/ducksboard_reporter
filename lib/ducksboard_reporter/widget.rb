@@ -10,7 +10,7 @@ module DucksboardReporter
       @id = id
       @reporter = reporter
       @options = options
-      @widget = instanciate_widget
+      @updater = instanciate_updater
     end
 
     def start
@@ -40,7 +40,7 @@ module DucksboardReporter
 
       debug log_format("Updating value #{value}")
 
-      @widget.update(value)
+      @updater.update(value)
     rescue Net::ReadTimeout
       # accept timeout errors
     end
@@ -60,7 +60,7 @@ module DucksboardReporter
       options.value || :value
     end
 
-    def instanciate_widget
+    def instanciate_updater
       klass = Class.new(Ducksboard::Widget)
       klass.default_timeout(interval - 1)
       klass.new(id)
