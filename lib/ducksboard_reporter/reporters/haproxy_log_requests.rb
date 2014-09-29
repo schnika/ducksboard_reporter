@@ -9,7 +9,6 @@ module DucksboardReporter
         include Celluloid::Logger
 
         def initialize(reporter, file)
-          super
           @reporter = reporter
           @file = file
           @dir = File.dirname(file)
@@ -19,7 +18,10 @@ module DucksboardReporter
           notifier = INotify::Notifier.new
           info("LogRotateWatcher: Watcher started for #{@file}")
           notifier.watch(@dir, :create) do |event|
-            @reporter.async.open_log if event.absolute_name == @file
+	    if event.absolute_name == @file
+              info("LogRotateWatcher: New file created #{@file}")
+              @reporter.async.open_log
+	    end
           end
         end
       end
@@ -29,7 +31,7 @@ module DucksboardReporter
       def collect
         requests = 0
         nosrvs = 0
-        watcher = LogrotateWatcher.new.start
+        watcher = LogRotateWatcher.new(self, options.logfile).start
 
         open_log
 
@@ -63,7 +65,9 @@ module DucksboardReporter
           old_file.close if old_file rescue nil
         rescue Errno::ENOENT
           error("HaproxyLogRequests: Cannot open #{options.logfile}")
-          return
+          error("HaproxyLogRequests: Waiting for file #{options.logfile} to be created")
+          sleep 5
+          retry
         end
         @file.seek(0, IO::SEEK_END)
       end
