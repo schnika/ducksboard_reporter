@@ -6,6 +6,7 @@ module DucksboardReporter
 
       class LogRotateWatcher
         include Celluloid
+        include Celluloid::Logger
 
         def initialize(reporter, file)
           super
@@ -16,6 +17,7 @@ module DucksboardReporter
 
         def start
           notifier = INotify::Notifier.new
+          info("LogRotateWatcher: Watcher started for #{@file}")
           notifier.watch(@dir, :create) do |event|
             @reporter.async.open_log if event.absolute_name == @file
           end
@@ -27,7 +29,9 @@ module DucksboardReporter
       def collect
         requests = 0
         nosrvs = 0
+        watcher = LogrotateWatcher.new.start
 
+        open_log
 
         @timestamp = Time.now.to_i
 
