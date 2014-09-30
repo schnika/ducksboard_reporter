@@ -14,6 +14,7 @@ require "ducksboard_reporter/widget"
 require "ducksboard_reporter/reporters/random"
 require "ducksboard_reporter/reporters/haproxy_log_requests"
 require "ducksboard_reporter/reporters/cpu_usage"
+require "ducksboard_reporter/reporters/bandwidth"
 
 Thread.abort_on_exception = true
 
