@@ -1,15 +1,19 @@
 require "rubygems"
 
 require "logger"
-require "hashie"
 require "celluloid"
 require "timers"
 require "ducksboard"
+require "hashie/extensions/symbolize_keys"
+Hash.include Hashie::Extensions::SymbolizeKeys
 
 require "ducksboard_reporter/version"
 require "ducksboard_reporter/reporter"
-require "ducksboard_reporter/reporters"
 require "ducksboard_reporter/widget"
+
+require "ducksboard_reporter/reporters/random"
+require "ducksboard_reporter/reporters/haproxy_log_requests"
+require "ducksboard_reporter/reporters/cpu_usage"
 
 Thread.abort_on_exception = true
 
@@ -26,9 +30,8 @@ module DucksboardReporter
 
     attr_reader :config, :reporters, :widgets
 
-    def initialize(config_file)
-      @config ||= Hashie::Mash.load(config_file)
-
+    def initialize(config)
+      @config = config.symbolize_keys!
       register_reporters
       register_widgets
     end

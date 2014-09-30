@@ -3,9 +3,11 @@ $:.unshift File.expand_path("../../lib", __FILE__)
 
 require "ducksboard_reporter"
 require "trollop"
+require "yaml"
 
 opts = Trollop::options do
-  opt :config_file, "Define config file", short: 'f', type: :string, required: true
+  opt :config_file, "Path to config file", short: "f", type: :string, required: true
 end
 
-DucksboardReporter::App.new(opts[:config_file]).start
+config = YAML.load_file(opts[:config_file])
+DucksboardReporter::App.new(config).start

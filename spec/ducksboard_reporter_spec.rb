@@ -5,19 +5,10 @@ class DucksboardReporter::Reporters::FooBar < DucksboardReporter::Reporter
 end
 
 describe DucksboardReporter::App do
-  let(:app) { DucksboardReporter::App.new(File.expand_path("../config.yml", __FILE__)) }
+  let(:config) { YAML.load_file(File.expand_path("../config.yml", __FILE__)) }
+  let(:app) { DucksboardReporter::App.new(config) }
   let(:reporter) { app.reporters["foo_bar"] }
   let(:widget) { app.widgets.first }
-
-  describe "configuration" do
-    let(:config) { app.config }
-
-    it "load from YAML file" do
-      expect(config.reporters.size).to eq(2)
-      expect(config.widgets.size).to eq(1)
-      expect(config.api_key).to eq("YOUR_API_KEY")
-    end
-  end
 
   it "registers reporters from config" do
     expect(app.reporters.values.map(&:class)).to include(DucksboardReporter::Reporters::Random)
@@ -34,7 +25,7 @@ describe DucksboardReporter::App do
     end
 
     it "applies options to reporters" do
-      expect(reporter.options.log_file).to eq("/var/log/haproxy.log")
+      expect(reporter.options[:log_file]).to eq("/var/log/haproxy.log")
     end
   end
 
