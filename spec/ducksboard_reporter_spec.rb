@@ -13,8 +13,8 @@ describe DucksboardReporter::App do
     let(:config) { app.config }
 
     it "load from YAML file" do
-      expect(config.reporters).to have(2).items
-      expect(config.widgets).to have(1).item
+      expect(config.reporters.size).to eq(2)
+      expect(config.widgets.size).to eq(1)
       expect(config.api_key).to eq("YOUR_API_KEY")
     end
   end
@@ -34,7 +34,7 @@ describe DucksboardReporter::App do
     end
 
     it "applies options to reporters" do
-      expect(reporter.log_file).to eq("/var/log/haproxy.log")
+      expect(reporter.options.log_file).to eq("/var/log/haproxy.log")
     end
   end
 

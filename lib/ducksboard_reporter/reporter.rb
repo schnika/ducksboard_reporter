@@ -3,10 +3,11 @@ module DucksboardReporter
     include Celluloid
     include Celluloid::Logger
 
-    attr_accessor :value, :timestamp, :name
+    attr_accessor :value, :timestamp, :name, :options
 
-    def initialize(name)
+    def initialize(name, options = {})
       @name = name
+      @options = options
     end
 
     def start

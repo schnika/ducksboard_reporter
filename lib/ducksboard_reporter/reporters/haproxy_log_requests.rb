@@ -11,7 +11,7 @@ module DucksboardReporter
         begin
           file = File.open(options.logfile, "r")
         rescue Errno::ENOENT
-          error("HaproxyLogRequests: Cannot open #{options.logfile}")
+          error("HaproxyLogRequests: Cannot open #{options.log_file}")
           return
         end
 

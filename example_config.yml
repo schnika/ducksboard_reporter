@@ -8,7 +8,7 @@ reporters:
   - name: haproxy_log_requests
     type: HaproxyLogRequests
     options:
-      logfile: /var/log/haproxy.log
+      log_file: /var/log/haproxy.log
 
 widgets:
   - type: Box

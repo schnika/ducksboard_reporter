@@ -36,7 +36,10 @@ module DucksboardReporter
     def start
       Signal.trap("INT") { exit }
 
-      Ducksboard.api_key = config.api_key
+      Ducksboard.api_key = config[:api_key]
+
+      start_reporters
+      start_widgets
 
       sleep # let the actors continue their work
     end
@@ -44,15 +47,8 @@ module DucksboardReporter
     def register_reporters
       @reporters = {}
 
-      @config.reporters.each do |config|
-        reporter = Reporters.const_get(config.type, false).new(config.name)
-
-        if config.options
-          config.options.each do |method, value|
-            reporter.send("#{method}=", value)
-          end
-        end
-
+      @config[:reporters].each do |config|
+        reporter = Reporters.const_get(config[:type], false).new(config[:name], config[:options])
         @reporters[reporter.name] = reporter
       end
     end
@@ -60,15 +56,15 @@ module DucksboardReporter
     def register_widgets
       @widgets = []
 
-      @config.widgets.each do |config|
-        reporter = @reporters[config.reporter]
+      @config[:widgets].each do |config|
+        reporter = @reporters.fetch(config[:reporter])
 
         unless reporter
-          logger.error("Cannot find reporter #{config.reporter}")
+          logger.error("Cannot find reporter #{config[:reporter]}")
           exit
         end
 
-        widget = Widget.new(config.type, config.id, reporter, config)
+        widget = Widget.new(config[:type], config[:id], reporter, config)
         @widgets << widget
       end
     end
