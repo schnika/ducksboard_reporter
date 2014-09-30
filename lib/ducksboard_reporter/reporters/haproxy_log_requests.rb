@@ -9,7 +9,7 @@ module DucksboardReporter
         nosrvs = 0
 
         begin
-          file = File.open(options.logfile, "r")
+          file = File.open(options[:log_file], "r")
         rescue Errno::ENOENT
           error("HaproxyLogRequests: Cannot open #{options.log_file}")
           return
