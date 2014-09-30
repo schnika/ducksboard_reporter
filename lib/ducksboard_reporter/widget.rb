@@ -14,7 +14,7 @@ module DucksboardReporter
     end
 
     def start
-      debug log_format("Started using reporter #{reporter}")
+      debug log_format("Started using reporter #{reporter.name}")
 
       every(interval) do
         update
@@ -48,7 +48,7 @@ module DucksboardReporter
     private
 
     def log_format(msg)
-      @log_prefix ||= "Widget #{self.class.name.split("::").last}(#{id}): "
+      @log_prefix ||= "Widget #{@klass}(#{id}): "
       @log_prefix + msg
     end
 
