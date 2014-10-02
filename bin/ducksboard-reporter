@@ -4,10 +4,30 @@ $:.unshift File.expand_path("../../lib", __FILE__)
 require "ducksboard_reporter"
 require "trollop"
 require "yaml"
+require "rund"
 
 opts = Trollop::options do
   opt :config_file, "Path to config file", short: "f", type: :string, required: true
+  opt :pid_file, "Path to pid file", short: "p", type: :string
+  opt :log_file, "Path to log file", short: "l", type: :string
+  opt :run_dir,  "Path to run dir", type: :string
+  opt :user,  "The daemon wil run as specified user", type: :string
+  opt :group,  "The daemon wil run as specified group", type: :string
+  opt :daemonize, "Detach from terminal", short: "d", default: false
 end
 
+Rund.debug = true
+
 config = YAML.load_file(opts[:config_file])
+
+if opts[:daemonize]
+  Rund.pid_file = opts[:pid_file]
+  Rund.log_file = opts[:log_file]
+  Rund.run_dir  = opts[:run_dir]
+  Rund.user     = opts[:user]
+  Rund.group     = opts[:group]
+  Rund.daemonize!
+end
+
 DucksboardReporter::App.new(config).start
+
