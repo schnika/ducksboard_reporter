@@ -15,8 +15,8 @@ module Rund
     change_user  if @user
     write_pid    if @pid_file
     change_dir
-    redirect_output
     redirect_input
+    redirect_output
 
     close_local_stderr
   end
