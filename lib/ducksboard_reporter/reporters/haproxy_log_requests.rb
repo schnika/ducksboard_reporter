@@ -15,7 +15,7 @@ module DucksboardReporter
           return
         end
 
-        tail.every_second do
+        every(1) do
           @requests, requests = requests, 0
           @nosrvs, nosrvs = nosrvs, 0
         end
@@ -26,6 +26,8 @@ module DucksboardReporter
             nosrvs += 1
           when /./
             requests += 1
+          else
+            sleep 0.1
           end
         end
 
