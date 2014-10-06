@@ -9,37 +9,29 @@ module DucksboardReporter
         nosrvs = 0
 
         begin
-          file = File.open(options[:log_file], "r")
+          tail = FileTail.new(options[:log_file])
         rescue Errno::ENOENT
-          error("HaproxyLogRequests: Cannot open #{options[:log_file]}")
+          error("HaproxyLogRequests: Log file does not exist #{options[:log_file]}")
           return
         end
 
-        file.seek(0, IO::SEEK_END)
-        @timestamp = Time.now.to_i
+        tail.every_second do
+          @requests, requests = requests, 0
+          @nosrvs, nosrvs = nosrvs, 0
+        end
 
-        while true do
-          if (current_time = Time.now.to_i) > @timestamp # flush every second
-            @requests, requests = requests, 0
-            @nosrvs, nosrvs = nosrvs, 0
-            @timestamp = current_time
-          end
-
-          IO.select([file])
-          line = file.gets
-
+        tail.on_line do |line|
           case line
           when /NOSRV/
             nosrvs += 1
           when /./
             requests += 1
-          else
-            sleep 0.1
           end
         end
+
+        tail.run
       end
     end
   end
 end
-
 

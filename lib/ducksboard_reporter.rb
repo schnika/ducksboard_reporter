@@ -10,6 +10,7 @@ Hash.include Hashie::Extensions::SymbolizeKeys
 require "ducksboard_reporter/version"
 require "ducksboard_reporter/reporter"
 require "ducksboard_reporter/widget"
+require "ducksboard_reporter/file_tail"
 
 require "ducksboard_reporter/reporters/random"
 require "ducksboard_reporter/reporters/haproxy_log_requests"
