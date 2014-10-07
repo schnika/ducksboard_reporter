@@ -1,5 +1,6 @@
 module DucksboardReporter
   class FileTail
+    include Celluloid::Logger
 
     attr_accessor :value, :timestamp, :name, :options
 
@@ -23,10 +24,6 @@ module DucksboardReporter
       retry
     end
 
-    def every_second(&block)
-      @every_second_block = block
-    end
-
     def on_line(&block)
       @line_block = block
     end
@@ -35,15 +32,22 @@ module DucksboardReporter
 
     def open_file
       if @file && !@file.closed?
-        if File.stat(@path).ino == @file.stat.ino
+        if (new_inode = File.stat(@path).ino) == @file.stat.ino
           return
         else
+          debug(log_format("Inode changed (#{@file.stat.ino} => #{new_inode}). Reopening file."))
           @file.close
         end
       end
 
       @file = File.open(@path, "r")
       @file.seek(0, IO::SEEK_END)
+      debug(log_format("Tailing file with inode #{@file.stat.ino}"))
+    end
+
+    def log_format(msg)
+      @log_prefix ||= "FileTail (#{@path}): "
+      @log_prefix + msg
     end
   end
 end
