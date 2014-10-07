@@ -29,4 +29,5 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "celluloid", "~> 0.16"
   spec.add_runtime_dependency "timers", ">= 1.1.0"
   spec.add_runtime_dependency "trollop", ">= 1.16.2"
+  spec.add_runtime_dependency "faraday", ">= 0.9.0"
 end
