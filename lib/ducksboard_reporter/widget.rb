@@ -22,18 +22,7 @@ module DucksboardReporter
     end
 
     def update
-      value = case value_method
-      when Symbol
-        @reporter.public_send(value_method)
-      when Hash
-        value_method.inject({}) do |memo, (k, v)|
-          memo[k] = (v.is_a?(Symbol) ? @reporter.public_send(v) : v)
-          memo
-        end
-      else
-        value_method
-      end
-
+      value = map_value(value_method)
       debug log_format("Updating value #{value}")
 
       @updater.update(value)
@@ -60,6 +49,21 @@ module DucksboardReporter
       klass = Class.new(Ducksboard::Widget)
       klass.default_timeout(interval - 1)
       klass.new(@id)
+    end
+
+    def map_value(object)
+      p object
+      case object
+      when Symbol, /\A:/
+        @reporter.public_send(object)
+      when Hash
+        object.inject({}) do |memo, (k, v)|
+          memo[k] = map_value(v)
+          memo
+        end
+      else
+        object
+      end
     end
   end
 end
