@@ -52,9 +52,10 @@ module DucksboardReporter
     end
 
     def map_value(object)
-      p object
+      object = $1.to_sym if object =~ /\A:(.+)/
+
       case object
-      when Symbol, /\A:/
+      when Symbol
         @reporter.public_send(object)
       when Hash
         object.inject({}) do |memo, (k, v)|
