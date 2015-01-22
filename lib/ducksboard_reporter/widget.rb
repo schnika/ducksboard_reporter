@@ -1,5 +1,6 @@
 module DucksboardReporter
   class Widget
+
     include Celluloid
     include Celluloid::Logger
 
@@ -26,7 +27,7 @@ module DucksboardReporter
       debug log_format("Updating value #{value}")
 
       @updater.update(value)
-    rescue Net::ReadTimeout, Net::OpenTimeout
+    rescue *timeout_errors
       # accept timeout errors
     end
 
@@ -64,6 +65,15 @@ module DucksboardReporter
         end
       else
         object
+      end
+    end
+
+    def timeout_errors
+      v = RUBY_VERSION.split(".")[0].to_i
+      if v >= 2
+        [Net::ReadTimeout, Net::OpenTimeout]
+      else
+        [Timeout::Error]
       end
     end
   end
