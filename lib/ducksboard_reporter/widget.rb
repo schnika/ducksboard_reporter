@@ -27,8 +27,8 @@ module DucksboardReporter
       debug log_format("Updating value #{value}")
 
       @updater.update(value)
-    rescue *timeout_errors
-      # accept timeout errors
+    rescue *timeout_errors, Errno::ECONNRESET => e
+      error e
     end
 
     def interval
